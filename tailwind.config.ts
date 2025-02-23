@@ -16,6 +16,9 @@ export default {
           '"Noto Color Emoji"',
         ],
       },
+      gridTemplateRows: {
+        "layout": "auto 1fr auto",
+      },
     },
   },
   plugins: [],

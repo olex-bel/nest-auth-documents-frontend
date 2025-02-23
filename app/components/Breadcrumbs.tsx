@@ -1,0 +1,44 @@
+import { useLocation, Link } from "react-router";
+
+export default function Breadcrumbs() {
+    const location = useLocation();
+    const pathnames = location.pathname.split("/").filter((x) => x);
+    const crumbs = [{ title: "Home", path: "/"}];
+
+    pathnames.forEach((value, index) => {
+        const path = `/${pathnames.slice(0, index + 1).join("/")}`;
+        let title = value;
+
+        if (value === "add-document") {
+            title = "Add Document";
+        } else if (value === "edit") {
+            title = "Edit Document";
+        } else if (value === "documents" || value === "folders") {
+            return;
+        }
+        
+        crumbs.push({ title, path });
+    });
+
+    const lastIndex = crumbs.length - 1;
+
+    if (crumbs.length === 0) {
+        return null;
+    }
+
+    return (
+        <ol aria-label="breadcrumb" className="flex justify-start px-2 py-4 gap-1">
+            {
+                crumbs.map((crumb, index) => (
+                    <li key={index}>
+                        {
+                            index === lastIndex ?
+                                <span>{crumb.title}</span> :
+                                <Link className="underline after:content-['>']" to={crumb.path}>{crumb.title}</Link>
+                        }
+                    </li>
+                ))
+            }
+        </ol>
+    )
+}
