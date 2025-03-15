@@ -27,8 +27,18 @@ type DocumentPermissionResponse = {
     isOwner: boolean;
 }
 
+export type User = {
+    id: string;
+    email: string;
+    enabled: boolean;
+};
+
 type UserRoles = string[];
 
+type UserResponse = {
+    items: User[],
+    newCursor?: string;
+}
 
 export default class UserService extends BaseService {
     constructor (token: string) {
@@ -51,5 +61,17 @@ export default class UserService extends BaseService {
         const url = this.getUrl('users/roles');
         const result = await this.get(url)
         return result as UserRoles;
+    }
+
+    async getAllUsers(limit: number, cursor?: string) {
+        const url = this.getUrlWithPagination('users/all', limit, undefined, cursor);
+        const result = await this.get(url)
+        return result as UserResponse;
+    }
+
+    async getUser(userId: string) {
+        const url = this.getUrl(`users/${userId}`);
+        const result = await this.get(url)
+        return result as User;
     }
 }

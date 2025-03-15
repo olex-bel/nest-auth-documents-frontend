@@ -1,14 +1,16 @@
+
 import { Link } from "react-router";
-import type { Route } from "./+types/home";
 import Authenticator from "~/services/authenticator";
 import { FolderService } from "~/services/documents/folder";
+import FoldersTable from "~/components/common/FoldersTable";
 import CreateFolderButton from "~/components/admin/folders/CreateFolderButton";
 import SearchForm from "~/components/common/SearchForm";
-import FoldersTable from "~/components/common/FoldersTable";
+import { useRoles } from "~/hooks/useRoles";
+import type { Route } from "./+types/manage-folders";
 
 export function meta({ }: Route.MetaArgs) {
     return [
-        { title: "Document editor" },
+        { title: "Manage folders" },
         { name: "description", content: "Welcome to document editor!" },
     ];
 }
@@ -18,29 +20,33 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
     const searchParams = new URL(request.url).searchParams;
     const cursor = searchParams.get("cursor") as string;
     const query = searchParams.get("query") as string;
-    const folderResponse =  await authenticator.authenticatedRequest(FolderService, async (service) => {
-        return service.getFolders(10, query, cursor);
+    const folderResponse = await authenticator.authenticatedRequest(FolderService, async (service) => {
+        return service.getAllFolders(10, query, cursor);
     });
 
     return folderResponse;
 }
 
-export default function Home({ loaderData }: Route.ComponentProps) {
+export default function ManageFolders({ loaderData }: Route.ComponentProps) {
     const { items, newCursor } = loaderData;
+    const roles = useRoles();
+    const canManageFolders = roles.includes("admin");
 
     return (
         <>
-            <div className="flex items-center p-2 gap-2 justify-space-between">
+            <div className="flex items-center p-2 gap-2">
+                <CreateFolderButton />
                 <SearchForm />
                 {
                     newCursor? 
-                        <Link to={`/?cursor=${newCursor}`} className="font-bold underline ml-auto">Next &gt;&gt;</Link>
+                        <Link to={`./?cursor=${newCursor}`} className="font-bold underline ml-auto">Next &gt;&gt;</Link>
                         : 
                         null
                 }
             </div>
 
-            <FoldersTable items={items} />
+            <FoldersTable items={items} showActions={canManageFolders} />
         </>
-    )
+        
+    );
 }

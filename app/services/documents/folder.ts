@@ -1,7 +1,7 @@
 import { BaseService } from "./base.service";
 import type { Permission } from "./user";
 
-type Folder = {
+export type Folder = {
     id: string;
     name: string;
     permissionId: Permission;
@@ -27,16 +27,22 @@ export class FolderService extends BaseService {
         super(token);
     }
 
-    async getFolders(limit: number, cursor?: string) {
-        const url = this.getUrlWithPagination('folder', limit, cursor);
+    async getFolders(limit: number, query?: string, cursor?: string) {
+        const url = this.getUrlWithPagination('folder', limit, query, cursor);
         const result = await this.get(url)
         return result as FolderResponse;
     }
 
-    async getFolderDcoments(foldeId: string, limit: number, cursor?: string) {
-        const url = this.getUrlWithPagination(`folder/${foldeId}`, limit, cursor);
+    async getFolderDocuments(foldeId: string, limit: number, query?: string, cursor?: string) {
+        const url = this.getUrlWithPagination(`folder/${foldeId}`, limit, query, cursor);
         const result = await this.get(url)
         return result as FolderDocumentsResponse;
+    }
+
+    async getAllFolders(limit: number, query?: string, cursor?: string) {
+        const url = this.getUrlWithPagination('folder/all', limit, query, cursor);
+        const result = await this.get(url)
+        return result as FolderResponse;
     }
 }
 

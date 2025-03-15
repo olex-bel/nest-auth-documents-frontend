@@ -1,5 +1,5 @@
 import { useRoles } from "~/hooks/useRoles";
-import Button from "../common/Button";
+import Button from "../../common/Button";
 
 export default function CreateFolderButton() {
     const roles = useRoles();

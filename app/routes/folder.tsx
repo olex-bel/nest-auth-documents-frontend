@@ -18,7 +18,7 @@ export async function clientLoader({ request, params }: Route.ClientLoaderArgs) 
     const searchParams = new URL(request.url).searchParams;
     const cursor = searchParams.get('cursor') as string;
     const documentListResponse = await authenticator.authenticatedRequest(FolderService, async (service) => {
-        return service.getFolderDcoments(params.folderId!, 10, cursor);
+        return service.getFolderDocuments(params.folderId!, 10, cursor);
     });
 
     return documentListResponse;

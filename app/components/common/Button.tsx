@@ -5,6 +5,7 @@ import type { ButtonHTMLAttributes  } from "react";
 export enum ButtonType {
     Primary = "primary",
     Danger = "danger",
+    Flat = "flat", 
 };
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {

@@ -53,13 +53,17 @@ export abstract class BaseService {
         return this.request("DELETE", url);
     }
 
-    protected getUrlWithPagination(path:string, limit: number, cursor?: string) {
+    protected getUrlWithPagination(path:string, limit: number, query?: string, cursor?: string) {
         const params = new URLSearchParams({
             limit: limit.toString(),
         });
 
         if (cursor) {
             params.append("cursor", cursor);
+        }
+
+        if (query) {
+            params.append("query", query);
         }
 
         return this.getUrl(path, params);

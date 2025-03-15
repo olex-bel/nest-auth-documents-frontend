@@ -13,7 +13,9 @@ export default function Breadcrumbs() {
             title = "Add Document";
         } else if (value === "edit") {
             title = "Edit Document";
-        } else if (value === "documents" || value === "folders") {
+        } else if (value === "folders") {
+            title = "Manage Folders";
+        } else if (value === "documents" || value === "folders" || value === "admin") {
             return;
         }
         
