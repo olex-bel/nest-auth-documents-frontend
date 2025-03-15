@@ -13,6 +13,13 @@ export default [
             route(":folderId/add-document", "routes/add-document.tsx"),
             route(":folderId/documents/:documentId/edit", "routes/edit-document.tsx"),
         ]),
+
+        route("/profile", "routes/profile.tsx"),
+        ...prefix("admin", [
+            route("/users", "routes/manage-users.tsx"),
+            route("/users/:userId", "routes/user.tsx"),
+            route("/folders", "routes/manage-folders.tsx"),
+        ]),
     ]),
     
 ] satisfies RouteConfig;
