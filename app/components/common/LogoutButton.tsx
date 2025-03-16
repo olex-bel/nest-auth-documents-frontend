@@ -1,11 +1,12 @@
-import { redirect } from "react-router";
+import { useNavigate  } from "react-router";
 import Authenticator from "~/services/authenticator";
 
 export default function LogoutButton() {
+    const navigate = useNavigate();
     const authenticator = Authenticator.getInstance();
     const logout = () => {
         authenticator.logout();
-        redirect("/signin");
+        navigate("/login");
     };
 
     return (

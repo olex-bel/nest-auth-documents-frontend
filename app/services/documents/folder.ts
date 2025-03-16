@@ -12,7 +12,7 @@ type Document = {
     title: string;
 };
 
-type FolderResponse = {
+export type FolderResponse = {
     items: Folder[],
     newCursor?: string;
 }
@@ -28,21 +28,15 @@ export class FolderService extends BaseService {
     }
 
     async getFolders(limit: number, query?: string, cursor?: string) {
-        const url = this.getUrlWithPagination('folder', limit, query, cursor);
+        const url = this.getUrlWithPagination('folder', { limit, cursor }, { query });
         const result = await this.get(url)
         return result as FolderResponse;
     }
 
     async getFolderDocuments(foldeId: string, limit: number, query?: string, cursor?: string) {
-        const url = this.getUrlWithPagination(`folder/${foldeId}`, limit, query, cursor);
+        const url = this.getUrlWithPagination(`folder/${foldeId}`, { limit, cursor }, { query });
         const result = await this.get(url)
         return result as FolderDocumentsResponse;
-    }
-
-    async getAllFolders(limit: number, query?: string, cursor?: string) {
-        const url = this.getUrlWithPagination('folder/all', limit, query, cursor);
-        const result = await this.get(url)
-        return result as FolderResponse;
     }
 }
 

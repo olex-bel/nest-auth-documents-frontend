@@ -18,9 +18,9 @@ export async function clientLoader() {
 
 export default function AppLayout() {
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen w-4/5 md:w-3/5 mx-auto">
             <Header />
-            <main className="w-full flex-grow w-4/5 md:w-3/5 mx-auto">
+            <main className="flex-grow">
                 <Breadcrumbs />
                 <section className="w-full h-full">
                     <Outlet/>

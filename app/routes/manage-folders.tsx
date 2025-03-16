@@ -1,7 +1,7 @@
 
 import { Link } from "react-router";
 import Authenticator from "~/services/authenticator";
-import { FolderService } from "~/services/documents/folder";
+import { AdminService } from "~/services/documents/admin.servic";
 import FoldersTable from "~/components/common/FoldersTable";
 import CreateFolderButton from "~/components/admin/folders/CreateFolderButton";
 import SearchForm from "~/components/common/SearchForm";
@@ -20,8 +20,8 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
     const searchParams = new URL(request.url).searchParams;
     const cursor = searchParams.get("cursor") as string;
     const query = searchParams.get("query") as string;
-    const folderResponse = await authenticator.authenticatedRequest(FolderService, async (service) => {
-        return service.getAllFolders(10, query, cursor);
+    const folderResponse = await authenticator.authenticatedRequest(AdminService, async (service) => {
+        return service.getFolders({limit: 10, query, cursor});
     });
 
     return folderResponse;

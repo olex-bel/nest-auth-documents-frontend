@@ -1,6 +1,13 @@
 import { SERVICE_BASE_URL } from "./constants";
 import { UnauthorizedError } from "./errors";
 
+type PaginationOptions = {
+    limit: number;
+    cursor?: string;
+}
+
+type QueryOptions = Record<string, string | number | undefined>;
+
 export abstract class BaseService {
     protected token: string;
 
@@ -53,17 +60,22 @@ export abstract class BaseService {
         return this.request("DELETE", url);
     }
 
-    protected getUrlWithPagination(path:string, limit: number, query?: string, cursor?: string) {
+    protected getUrlWithPagination(path:string, options: PaginationOptions, queryOptions?: QueryOptions) {
         const params = new URLSearchParams({
-            limit: limit.toString(),
+            limit: options.limit.toString(),
         });
 
-        if (cursor) {
-            params.append("cursor", cursor);
+        if (options.cursor) {
+            params.append("cursor", options.cursor);
         }
 
-        if (query) {
-            params.append("query", query);
+        if (queryOptions) {
+            for (const [key, value] of Object.entries(queryOptions)) {
+                console.log(key, value);
+                if (typeof value !== "undefined" && value !== null) {
+                    params.append(key, value.toString());
+                }
+            }
         }
 
         return this.getUrl(path, params);

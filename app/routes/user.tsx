@@ -2,8 +2,7 @@
 import React from "react";
 import { Form, Await } from "react-router";
 import Authenticator from "~/services/authenticator";
-import UserService from "~/services/documents/user";
-import { FolderService } from "~/services/documents/folder";
+import { AdminService } from "~/services/documents/admin.servic";
 import Button from "~/components/common/Button";
 import FoldersTable from "~/components/common/FoldersTable";
 import FoldersTableSkeleton from "~/components/skeleton/FoldersTableSkeleton";
@@ -18,14 +17,14 @@ export function meta({ }: Route.MetaArgs) {
 
 export async function clientLoader({ request, params }: Route.ClientLoaderArgs) {
     const authenticator = Authenticator.getInstance();
-    const user = await authenticator.authenticatedRequest(UserService, async (service) => {
+    const user = await authenticator.authenticatedRequest(AdminService, async (service) => {
         return service.getUser(params.userId);
     });
     const searchParams = new URL(request.url).searchParams;
     const cursor = searchParams.get("cursor") as string;
     const query = searchParams.get("query") as string;
-    const folderResponse = await authenticator.authenticatedRequest(FolderService, async (service) => {
-        return service.getAllFolders(10, query, cursor);
+    const folderResponse = authenticator.authenticatedRequest(AdminService, async (service) => {
+        return service.getFolders({ limit: 10, query, cursor, userId: params.userId });
     });
 
     return { user, folders: folderResponse };
