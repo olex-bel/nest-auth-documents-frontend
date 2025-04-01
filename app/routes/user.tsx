@@ -1,11 +1,8 @@
-
-import React from "react";
-import { Form, Await } from "react-router";
+import { Outlet } from "react-router";
 import Authenticator from "~/services/authenticator";
-import { AdminService } from "~/services/documents/admin.servic";
-import Button from "~/components/common/Button";
-import FoldersTable from "~/components/common/FoldersTable";
-import FoldersTableSkeleton from "~/components/skeleton/FoldersTableSkeleton";
+import { AdminService } from "~/services/documents/admin";
+import UserInformation from "~/components/admin/user/UserInformation";
+import UserUpdateStatusForm from "~/components/admin/user/UserUpdateStatusForm";
 import type { Route } from "./+types/user";
 
 export function meta({ }: Route.MetaArgs) {
@@ -20,38 +17,42 @@ export async function clientLoader({ request, params }: Route.ClientLoaderArgs) 
     const user = await authenticator.authenticatedRequest(AdminService, async (service) => {
         return service.getUser(params.userId);
     });
-    const searchParams = new URL(request.url).searchParams;
-    const cursor = searchParams.get("cursor") as string;
-    const query = searchParams.get("query") as string;
-    const folderResponse = authenticator.authenticatedRequest(AdminService, async (service) => {
-        return service.getFolders({ limit: 10, query, cursor, userId: params.userId });
-    });
 
-    return { user, folders: folderResponse };
+    return { user };
 }
 
+export async function clientAction({ request, params }: Route.ClientActionArgs) {
+    const formData = await request.formData();
+    const action = formData.get("action") as string;
+    const userId = params.userId as string;
+    const authenticator = Authenticator.getInstance();
+
+    if (action === "update-status") {
+        const enabled = formData.get("enabled") === "on";
+        try {
+            await authenticator.authenticatedRequest(AdminService, async (service) => {
+                await service.updateUserStatus(userId, enabled);
+            });
+        } catch (error) {
+            return { errorMessage: "An error occurred while updating the user status. Please try later." };
+        }
+    } else {
+        throw new Error(`Invalid action: ${action}`);
+    }
+}
+
+
 export default function User({ loaderData }: Route.ComponentProps) {
-    const { user, folders } = loaderData;
+    const { user } = loaderData;
 
     return (
         <div>
-            <h1 className="mb-5">{user.email}</h1>
-
-            <Form>
-                <div className="flex gap-2">
-                    <label className="block flex items-center gap-1">
-                        Enabled
-                        <input type="checkbox" name="enabled" defaultChecked={user.enabled} />
-                    </label>
-                    <Button type="submit">Update</Button>
-                </div>
-            </Form>
-
-            <React.Suspense fallback={<FoldersTableSkeleton />}>
-                <Await resolve={folders}>
-                    {({ items, newCursor }) => <FoldersTable items={items} showActions={true} />}
-                </Await>
-            </React.Suspense>
+            <div className="md:flex md:flex-row gap-4">
+                <UserInformation user={user} />
+                <UserUpdateStatusForm user={user} />
+            </div>
+        
+            <Outlet />
         </div>
     )
 }

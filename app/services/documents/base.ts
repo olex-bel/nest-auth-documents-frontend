@@ -6,7 +6,7 @@ type PaginationOptions = {
     cursor?: string;
 }
 
-type QueryOptions = Record<string, string | number | undefined>;
+type QueryOptions = Record<string, string | number | boolean | undefined>;
 
 export abstract class BaseService {
     protected token: string;
@@ -71,7 +71,6 @@ export abstract class BaseService {
 
         if (queryOptions) {
             for (const [key, value] of Object.entries(queryOptions)) {
-                console.log(key, value);
                 if (typeof value !== "undefined" && value !== null) {
                     params.append(key, value.toString());
                 }

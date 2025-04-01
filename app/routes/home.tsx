@@ -2,7 +2,6 @@ import { Link } from "react-router";
 import type { Route } from "./+types/home";
 import Authenticator from "~/services/authenticator";
 import { FolderService } from "~/services/documents/folder";
-import CreateFolderButton from "~/components/admin/folders/CreateFolderButton";
 import SearchForm from "~/components/common/SearchForm";
 import FoldersTable from "~/components/common/FoldersTable";
 

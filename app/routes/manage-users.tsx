@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import UsersTable from "~/components/admin/users/UsersTable";
 import Authenticator from "~/services/authenticator";
-import { AdminService } from "~/services/documents/admin.servic";
+import { AdminService } from "~/services/documents/admin";
 import type { Route } from "./+types/manage-users";
 
 export function meta({ }: Route.MetaArgs) {

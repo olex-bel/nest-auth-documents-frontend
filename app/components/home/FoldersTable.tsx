@@ -10,7 +10,7 @@ type FoldersTableProps = {
 export default function FoldersTable({ items, showActions }: FoldersTableProps) {
     return (
         <>
-            <table className="table-autotext-left rtl:text-right text-gray-800 text-lg w-full rounded shadow-sm">
+            <table className="table-autotext-left rtl:text-right text-gray-800 text-lg w-full rounded">
                 <thead className="uppercase font-bold bg-slate-200">
                     <tr>
                         <th scope="col" className="px-3 py-1.5 md:px-6 md:py-3">ID</th>
@@ -25,7 +25,7 @@ export default function FoldersTable({ items, showActions }: FoldersTableProps) 
                             <tr key={folder.id} className="border-b border-slate-200">
                                 <td className="px-2 py-1 md:px-4 md:py-2">{folder.id}</td>
                                 <td className="px-2 py-1 md:px-4 md:py-2"><Link to={`/folders/${folder.id}`}>{folder.name}</Link></td>
-                                {showActions && <td className="px-2 py-1 md:px-4 md:py-2"><Actions folderId={folder.id} /></td>}
+                                {showActions && <td className="px-2 py-1 md:px-4 md:py-2"><Actions folder={folder} /></td>}
                             </tr>
                         ))
                     }

@@ -35,6 +35,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             </head>
             <body className="font-inter bg-slate-50">
                 {children}
+                <div id="modal"></div>
                 <ScrollRestoration />
                 <Scripts />
             </body>

@@ -1,5 +1,5 @@
 
-import { BaseService } from "./base.service";
+import { BaseService } from "./base";
 
 export type DocumentResponse = {
     id: string;

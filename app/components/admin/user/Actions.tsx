@@ -1,8 +1,8 @@
 import { useRef } from "react";
-import ModalDeleteFolder from "./ModalDeleteFolder";
-import ModalRenameFolder from "./ModalRenameFolder";
+import ModalRevokeFolderPermissions from "./ModalRevokeFolderPermissions";
+import ModalUpdateFolderPermissions from "./ModalUpdateFolderPermissions";
 import Button, { ButtonType } from "../../common/Button";
-import { IoClose, IoPencil } from "react-icons/io5";
+import { IoClose, IoPerson } from "react-icons/io5";
 import type { Folder } from "~/services/documents/folder";
 
 type ActionsProps = {
@@ -10,8 +10,8 @@ type ActionsProps = {
 }
 
 export default function Actions({ folder }: ActionsProps) {
-    const deleteDialogRef = useRef<HTMLDialogElement>(null);
-    const renameDialogRef = useRef<HTMLDialogElement>(null);
+    const revokeDialogRef = useRef<HTMLDialogElement>(null);
+    const updateDialogRef = useRef<HTMLDialogElement>(null);
     const { id } = folder;
 
     return (
@@ -21,7 +21,7 @@ export default function Actions({ folder }: ActionsProps) {
                     type="button" 
                     buttonType={ButtonType.Danger} 
                     aria-label="Delete folder"
-                    onClick={() => deleteDialogRef.current?.showModal()}
+                    onClick={() => revokeDialogRef.current?.showModal()}
                 >
                     <IoClose />
                 </Button>
@@ -30,14 +30,14 @@ export default function Actions({ folder }: ActionsProps) {
                     type="button"  
                     buttonType={ButtonType.Primary}  
                     aria-label="Rename folder"
-                    onClick={() => renameDialogRef.current?.showModal()}
+                    onClick={() => updateDialogRef.current?.showModal()}
                 >
-                    <IoPencil />
+                    <IoPerson />
                 </Button>
             </div>
 
-            <ModalDeleteFolder key={`delete-modal-${id}`} folder={folder} ref={deleteDialogRef} />
-            <ModalRenameFolder key={`rename-modal-${id}`} folder={folder} ref={renameDialogRef} />
+            <ModalRevokeFolderPermissions key={`revoke-modal-${id}`} folder={folder} ref={revokeDialogRef} />
+            <ModalUpdateFolderPermissions key={`rename-modal-${id}`} folder={folder} ref={updateDialogRef} />
         </div>
     );
 }

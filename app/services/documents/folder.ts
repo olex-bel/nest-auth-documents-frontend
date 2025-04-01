@@ -1,4 +1,4 @@
-import { BaseService } from "./base.service";
+import { BaseService } from "./base";
 import type { Permission } from "./user";
 
 export type Folder = {
@@ -28,7 +28,7 @@ export class FolderService extends BaseService {
     }
 
     async getFolders(limit: number, query?: string, cursor?: string) {
-        const url = this.getUrlWithPagination('folder', { limit, cursor }, { query });
+        const url = this.getUrlWithPagination('users/me/folders', { limit, cursor }, { query });
         const result = await this.get(url)
         return result as FolderResponse;
     }
@@ -37,6 +37,16 @@ export class FolderService extends BaseService {
         const url = this.getUrlWithPagination(`folder/${foldeId}`, { limit, cursor }, { query });
         const result = await this.get(url)
         return result as FolderDocumentsResponse;
+    }
+
+    async deleteFolder(folderId: string) {
+        const url = this.getUrl(`folder/${folderId}`);
+        await this.delete(url);
+    }
+
+    async renameFolder(folderId: string, folderName: string) {
+        const url = this.getUrl(`folder/rename/${folderId}`);
+        await this.patch(url, { name: folderName });
     }
 }
 
