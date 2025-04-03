@@ -5,11 +5,11 @@ import Button, { ButtonType } from "../../common/Button";
 import { IoClose, IoPerson } from "react-icons/io5";
 import type { Folder } from "~/services/documents/folder";
 
-type ActionsProps = {
+type AssignedFolderActionsProps = {
     folder: Folder;
 }
 
-export default function Actions({ folder }: ActionsProps) {
+export default function AssignedFolderActions({ folder }: AssignedFolderActionsProps) {
     const revokeDialogRef = useRef<HTMLDialogElement>(null);
     const updateDialogRef = useRef<HTMLDialogElement>(null);
     const { id } = folder;

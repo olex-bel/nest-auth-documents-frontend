@@ -18,7 +18,8 @@ export default [
         ...prefix("admin", [
             route("/users", "routes/manage-users.tsx"),
             route("/users/:userId", "routes/user.tsx", [
-                index("routes/user-folders.tsx")
+                index("routes/user-folders.tsx"),
+                route("add-folder", "routes/user-add-folder.tsx"),
             ]),
             route("/folders", "routes/manage-folders.tsx"),
         ]),

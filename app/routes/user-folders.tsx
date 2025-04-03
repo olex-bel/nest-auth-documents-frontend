@@ -1,10 +1,12 @@
 import React from "react";
-import { Await } from "react-router";
-import FoldersTable from "~/components/admin/folders/FoldersTable";
+import { Await, Link, useNavigate } from "react-router";
+import FoldersTable from "../components/admin/folders/FoldersTable";
 import FoldersTableSkeleton from "~/components/skeleton/FoldersTableSkeleton";
-import Actions from "~/components/admin/user/Actions";
-import Authenticator from "~/services/authenticator";
-import { AdminService } from "~/services/documents/admin";
+import AssignedFolderActions from "../components/admin/user/AssignedFolderActions";
+import Authenticator from "../services/authenticator";
+import { AdminService } from "../services/documents/admin";
+import SearchForm from "../components/common/SearchForm";
+import Button from "../components/common/Button";
 import type { Route } from "./+types/user-folders";
 
 export async function clientLoader({ request, params }: Route.ClientLoaderArgs) {
@@ -12,6 +14,7 @@ export async function clientLoader({ request, params }: Route.ClientLoaderArgs) 
     const searchParams = new URL(request.url).searchParams;
     const cursor = searchParams.get("cursor") as string;
     const query = searchParams.get("query") as string;
+    console.log(params.userId, "userId");
     const folderResponse = authenticator.authenticatedRequest(AdminService, async (service) => {
         return service.getUserFolders({ limit: 10, query, cursor, userId: params.userId });
     });
@@ -50,12 +53,34 @@ export async function clientAction({ request, params }: Route.ClientActionArgs) 
 }
 
 export default function UserFolders({ loaderData }: Route.ComponentProps) {
+    const navigate = useNavigate();
     const { folders } = loaderData;
+
+    const handleAssignFolder = () => {
+        navigate(`./add-folder`);
+    }
 
     return (
         <React.Suspense fallback={<FoldersTableSkeleton />}>
             <Await resolve={folders}>
-                {({ items, newCursor }) => <FoldersTable items={items} actionsComponent={Actions} />}
+                {({ items, newCursor }) => (
+                    <>
+                        <div className="flex items-center p-2 gap-2 justify-space-between">
+                            <Button onClick={handleAssignFolder}>
+                                Assign folder
+                            </Button>
+                            <SearchForm />
+
+                            {
+                                newCursor? 
+                                    <Link to={`./?cursor=${newCursor}`} className="font-bold underline ml-auto">Next &gt;&gt;</Link>
+                                    : 
+                                    null
+                            }
+                        </div>
+                        <FoldersTable items={items} actionsComponent={AssignedFolderActions} />
+                    </>
+                )}
             </Await>
         </React.Suspense>
     );
