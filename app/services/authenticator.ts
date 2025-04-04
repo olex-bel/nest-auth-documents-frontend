@@ -1,7 +1,7 @@
 
 import { redirect } from "react-router";
 import { AuthTokenStorage } from "./authTokenStorage";
-import { UnauthorizedError } from "./documents/errors";
+import { UnauthorizedError, AccessDeniedError } from "./documents/errors";
 import { login } from "./documents/auth";
 
 export default class Authenticator {
@@ -60,6 +60,10 @@ export default class Authenticator {
                 this.logout();
                 throw redirect("/login");
             }
+            if (error instanceof AccessDeniedError) {
+                throw redirect("/");
+            }
+
             throw error;
         }
     }

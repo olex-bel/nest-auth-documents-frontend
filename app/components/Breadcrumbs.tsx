@@ -15,6 +15,10 @@ export default function Breadcrumbs() {
             title = "Edit Document";
         } else if (value === "folders") {
             title = "Manage Folders";
+        } else if (value === "users") {
+            title = "Manage Users";          
+        } else if (value.match(/^[a-f0-9-]{36}$/)) {
+            title = `${value.slice(0, 8)}...`;
         } else if (value === "documents" || value === "folders" || value === "admin") {
             return;
         }

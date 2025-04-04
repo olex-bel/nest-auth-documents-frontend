@@ -1,5 +1,5 @@
 import { SERVICE_BASE_URL } from "./constants";
-import { UnauthorizedError } from "./errors";
+import { UnauthorizedError, AccessDeniedError } from "./errors";
 
 type PaginationOptions = {
     limit: number;
@@ -27,6 +27,10 @@ export abstract class BaseService {
 
         if (response.status === 401) {
             throw new UnauthorizedError("Unauthorized: Invalid email or password");
+        }
+
+        if (response.status === 403) {
+            throw new AccessDeniedError("Access denied: You do not have permission to access this resource");
         }
 
         if (!response.ok) {
