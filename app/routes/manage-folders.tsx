@@ -51,6 +51,16 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
         } catch (error) {
             return { errorMessage: "An error occurred while renaming the folder. Please try later." };
         }
+    } else if (action === "create") {
+        const folderName = formData.get("folderName") as string;
+
+        try {
+            await Authenticator.getInstance().authenticatedRequest(FolderService, async (service) => {
+                await service.createFolder(folderName);
+            });
+        } catch (error) {
+            return { errorMessage: "An error occurred while creating the folder. Please try later." };
+        }
     } else {
         throw new Error(`Invalid action: ${action}`);
     }

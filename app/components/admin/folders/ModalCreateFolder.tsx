@@ -2,33 +2,30 @@ import Modal from "~/components/common/Modal";
 import Button, { ButtonType } from "~/components/common/Button";
 import Input from "~/components/common/Input";
 import { useModalFetcher } from "~/hooks/useModalFetcher";
-import type { Folder } from "~/services/documents/folder";
 
-type ModalRenameFolderProps = {
-    folder: Folder;
+type ModalCreateFolderProps = {
     ref: React.RefObject<HTMLDialogElement | null>;
 }
 
-export default function ModalRenameFolder({ folder, ref }: ModalRenameFolderProps) {
+export default function ModalCreateFolder({ ref }: ModalCreateFolderProps) {
     const { fetcher, errorMessage, isSubmitting, reset } = useModalFetcher({ ref });
-    const { id, name } = folder;
     const handleCancel = () => {
         ref.current?.close();
         reset();
     }
-
+    
     return (
         <Modal ref={ref}>
             <fetcher.Form method="post">
-                <input type="hidden" name="folderId" value={id} />
                 <div className="p-4">
                     <Input 
                         type="text" 
                         name="folderName"
-                        aria-label="New Folder Name"
+                        aria-label="Folder Name"
+                        placeholder="Enter folder name"
                         className="w-full"
                         autoComplete="off"
-                        defaultValue={name}
+                        defaultValue=""
                     />
                     {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
                     <div className="flex justify-end gap-2 mt-4">
@@ -36,10 +33,10 @@ export default function ModalRenameFolder({ folder, ref }: ModalRenameFolderProp
                             type="submit" 
                             buttonType={ButtonType.Primary}
                             name="action" 
-                            value="rename"
+                            value="create"
                             disabled={isSubmitting} 
                         >
-                            Rename
+                            Create
                         </Button>
                         <Button 
                             type="button" 

@@ -48,5 +48,10 @@ export class FolderService extends BaseService {
         const url = this.getUrl(`folder/rename/${folderId}`);
         await this.patch(url, { name: folderName });
     }
+
+    async createFolder(folderName: string) {
+        const url = this.getUrl('folder');
+        await this.post(url, { name: folderName });
+    }
 }
 
