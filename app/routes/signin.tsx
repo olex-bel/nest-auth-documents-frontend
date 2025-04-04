@@ -1,4 +1,4 @@
-import { redirect, useFetcher } from "react-router";
+import { redirect, useFetcher, Link } from "react-router";
 import type { Route } from "./+types/signin";
 import InputField from "~/components/common/InputField";
 import ErrorMessage from "~/components/ErrorMessage";
@@ -39,6 +39,7 @@ export default function SignIn() {
 
     return (
         <section className="p-6 bg-slate-100 rounded">
+            <h1 className="text-xl font-semibold text-center mb-2">Welcome back!</h1>
             <section className="auth-form">
                 <fetcher.Form method="post" className="space-y-8">
                     <InputField label="Email" type="email" name="email" required />
@@ -56,6 +57,9 @@ export default function SignIn() {
                         </div>
                     }
                 </fetcher.Form>
+                <section className="flex justify-center mt-4">
+                    <Link to="/register" className="text-sky-500 hover:underline text-sm">Don't have an account? Sign Up</Link>
+                </section>
             </section>
         </section>
     );

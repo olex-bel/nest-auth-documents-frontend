@@ -1,42 +1,63 @@
 
-import { Form } from "react-router";
+import { useFetcher, Link, redirect } from "react-router";
 import InputField from "~/components/common/InputField";
+import ErrorMessage from "~/components/ErrorMessage";
+import { register } from "~/services/documents/auth";
+import { UserAlreadyExistsError } from "~/services/documents/errors";
+import type { Route } from "./+types/signup";
+
+export function meta({ }: Route.MetaArgs) {
+    return [
+        { title: "Create a new account." },
+        { name: "description", content: "Welcome to document editor!" },
+    ];
+}
+
+export async function clientAction({ request }: Route.ClientActionArgs) {
+    const formData = await request.formData();
+    const email = await formData.get("email") as string;
+    const password = await formData.get("password") as string;
+
+    try {
+        await register(email, password);
+        return redirect("/");
+    } catch (error) {
+        if (error instanceof UserAlreadyExistsError) {
+            return { errorMessage: error.message };
+        } 
+
+        return {
+            errorMessage: "An error occurred during registration. Please try again."
+        }
+    }
+}
 
 export default function SignUp() {
-    const errors = {};
-    let actionData = null;
-    let transition = {};
+    const fetcher = useFetcher();
+    const isSubmitting = fetcher.state !== "idle";
+    const errorMessage = fetcher.data?.errorMessage;
     
     return (
-        <section className="flex-center size-full max-sm:px-6">
+        <section className="p-6 bg-slate-100 rounded">
+            <h1 className="text-xl font-semibold text-center mb-2">Create a new account</h1>
             <section className="auth-form">
-                {/* <Form method="post" className="space-y-8">
-                    <div className="flex gap-4">
-                        <InputField label="First Name" name="firstName" required error={errors.firstName} />
-                        <InputField label="Last Name" name="lastName" required error={errors.lastName} />
-                    </div>
-                    <InputField label="Address" name="address1" required error={errors.address1} />
-                    <InputField label="City" name="city" required error={errors.city} />
-                    <div className="flex gap-4">
-                        <InputField label="State" name="state" required error={errors.state} />
-                        <InputField label="Postal Code" name="postalCode" required error={errors.postalCode} />
-                    </div>
-                    <div className="flex gap-4 justify-between">
-                        <InputField label="Date of Birth" type="date" name="dateOfBirth" required error={errors.dateOfBirth} />
-                        <InputField label="SSN" name="ssn" required error={errors.ssn} />
-                    </div>
-                    <InputField label="Email" type="email" name="email" required error={errors.email} />
-                    <InputField label="Password" type="password" name="password" required error={errors.password} />
+                <fetcher.Form method="post" className="space-y-8" autoComplete="off">
+                    <InputField label="Email" type="email" name="email" required />
+                    <InputField label="Password" type="password" name="password" autoComplete="new-password" required />
                     {
-                        actionData && "errorMessage" in actionData ?
-                            (<em className="text-red-600">{actionData["errorMessage"]}</em>)
-                            :
-                            null
+                        errorMessage && <div className="mt-0.5 text-center">
+                            <ErrorMessage>{errorMessage}</ErrorMessage>
+                        </div>
                     }
                     <div className="flex flex-col gap-4">
-                        <button type="submit" className="form-btn" disabled={transition.state == "submitting"}>Sign Up</button>
+                        <button type="submit" className="bg-sky-500 rounded py-2 text-slate-50 hover:bg-sky-400" disabled={isSubmitting}>
+                            {isSubmitting? "Signing Up..." : "Sign Up"}
+                        </button>
                     </div>
-                </Form> */}
+                </fetcher.Form>
+            </section>
+            <section className="flex justify-center mt-4">
+                <Link to="/login" className="text-sky-500 hover:underline text-sm">Already have an account? Sign In</Link>
             </section>
         </section>
     );

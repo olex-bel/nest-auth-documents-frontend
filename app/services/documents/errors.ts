@@ -11,3 +11,10 @@ export class AccessDeniedError extends Error {
         this.name = 'AccessDeniedError';
     }
 }
+
+export class UserAlreadyExistsError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'UserAlreadyExistsError';
+    }
+}
